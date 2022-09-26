@@ -1,8 +1,11 @@
 #!/bin/bash
 
-set -ux
+set -u
 
-webhook_url="$(cat webhook_url)"
+config_path=/etc/hpb
+
+dict_file=${config_path}/directory.txt
+webhook_url="$(cat ${config_path}/webhook_url.txt)"
 
 botname="たんおめbot"
 
@@ -36,15 +39,12 @@ do
 
     is_prev_sat ${date}
     if [ $? -eq 0 ]; then
-#         send_to_discord ${webhook_url} ${botname} "${name} の誕生日まで1週間です。"
-        echo "${name} の誕生日まで1週間です。"
+        send_to_discord ${webhook_url} ${botname} "${name} の誕生日まで1週間です。"
     fi
 
     is_today ${date}
     if [ $? -eq 0 ]; then
-#         send_to_discord ${webhook_url} ${botname} "${name} の誕生日です。おめでとう！"
-        echo "${name} の誕生日です。おめでとう！"
+        send_to_discord ${webhook_url} ${botname} "${name} の誕生日です。おめでとう！"
     fi
 
-done <directory.txt
-
+done <${dict_file}
